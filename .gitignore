@@ -31,3 +31,4 @@ MANIFEST
 
 #Ignore PythonClub project - settings.py file
 .PythonClub/settings.py
+PythonClub/settings.py

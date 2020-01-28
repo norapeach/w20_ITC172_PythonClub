@@ -40,7 +40,7 @@ class Resource(models.Model):
     resource_URL = models.URLField(null=True, blank=True)
     resource_date_entered = models.DateField()
     resource_added_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    resource_description = models.TextField
+    resource_description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.resource_name

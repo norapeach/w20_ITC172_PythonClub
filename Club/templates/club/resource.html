@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Resources</h1>
+<table class='table'>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>URL</th>
+        <th>Date Entered</th>
+        <th>Entered By</th>
+        <th>Resource Description</th>
+    </tr>
+    <!-- loop through each object in resource list and output the contained html -->
+    {% for r in resource_list %}
+        <tr>
+            <td>{{ r.resource_name }}</td>
+            <td>{{ r.resource_type }}</td>
+            <td>{{ r.resource_URL }}</td>
+            <td>{{ r.resource_date_entered }}</td>
+            <td>{{ r.resource_added_by }}</td>
+            <td>{{ r.resource_description }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
