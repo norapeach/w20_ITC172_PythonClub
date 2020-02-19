@@ -8,5 +8,7 @@ from . import views
 #   it would be a path with slashes for another file e.g. templates/club/file.html --> not sure if this is correct  
 urlpatterns = [
     path('', views.index, name='index'),
-    path('getResource/', views.getResource, name='resource')
+    path('getResource/', views.getResource, name='resource'),
+    path('getMeetings/', views.getMeetings, name='meetings'),
+    path('getMeetingDetails/<int:id>', views.getMeetingDetails, name='meetingdetail')
 ]
