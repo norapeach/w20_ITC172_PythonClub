@@ -21,7 +21,7 @@ def getMeetings(request):
     meeting_list = Meeting.objects.all()
     return render(request, 'Club/meetings.html', {'meeting_list': meeting_list})
 
-def getMeetingDetails(request, id):
+def getMeetingDetails(request, id): # could add an extended context to include meeting minutes
     meet = get_object_or_404(Meeting, pk=id)
     return render(request, 'Club/meetingdetail.html', {'meet': meet})
 
