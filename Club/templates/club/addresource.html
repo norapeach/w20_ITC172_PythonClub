@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add New Resource</h2>
+<p>Include a source that has helped in learning Python.</p>
+<p>Please note: the name, type, date added and added by fields <b>are required</b>.</p>
+<form method='POST' class='post-form'>
+    <table class='table'>
+        {% csrf_token %}
+        {{ resource.as_table }}
+    </table>
+    <button type = 'submit' class = 'save btn btn-default'>Save</button>
+</form>
+{% endblock %}

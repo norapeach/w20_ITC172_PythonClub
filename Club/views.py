@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 #import models from models.py
 from .models import Meeting, MeetingMinutes, Resource, Event
+from .forms import MeetingForm, MeetingMinutesForm, ResourceForm, EventForm
 
 # Create your views here:
 # first view is a basic function that returns the rendered index.html page 
@@ -23,5 +24,53 @@ def getMeetings(request):
 
 def getMeetingDetails(request, id): # could add an extended context to include meeting minutes
     meet = get_object_or_404(Meeting, pk=id)
-    return render(request, 'Club/meetingdetail.html', {'meet': meet})
+    meetingMinutes = MeetingMinutes.objects.filter(meeting_id=id)
+    details = {
+        'meet': meet,
+        'meetingMinutes': meetingMinutes,
+    }
+    return render(request, 'Club/meetingdetail.html', context=details)
+
+def getEvent(request):
+    event = Event.objects.all()
+    return render(request, 'Club/event.html', {'event': event})
+
+######### FORM VIEWS ##########
+def addMeeting(request):
+    form = MeetingForm
+    if request.method == 'POST':
+        form = MeetingForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=True)
+            post.save()
+            form = MeetingForm() # after form values are saved, return to empty form
+    else: 
+        form = MeetingForm() # if not POST or is_valid() == false, django returns empty form
+    return render(request, 'Club/addmeeting.html', {'form': form})
+
+def addMeetingMinutes(request): # this is not working and I am not certain why
+    minutes_f = MeetingMinutesForm
+    if request.method == 'POST':
+        minutes_f = MeetingMinutesForm(request.POST)
+        if minutes_f.is_valid():
+            post = minutes_f.save(commit=True)
+            post.save()
+            minutes_f = MeetingMinutesForm
+    else:
+        minutes_f = MeetingMinutesForm()
+    return render(request, 'Club/addmeetingmins.html', {'minutes_f': minutes_f})
+
+def addResource(request):
+    resource= ResourceForm
+    if request.method == 'POST':
+        resource=ResourceForm(request.POST)
+        if resource.is_valid():
+            resourcePost = resource.save(commit=True)
+            resourcePost.save()
+            resource=ResourceForm
+    else:
+        resource=ResourceForm()
+    return render(request, 'Club/addresource.html', {'resource': resource})
+
+
 

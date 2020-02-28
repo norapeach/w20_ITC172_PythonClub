@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add New Meeting</h2>
+<p>Use the following form to add a new meeting. <b>***Please Note: ALL fields are required***</b></p>
+
+<form method="POST" class="post-form">
+    <table class="table">
+        {% csrf_token %}
+        {{ form.as_table }}
+    </table>
+    <button type="submit" class="save btn btn-default">Save</button>
+</form>
+{% endblock %}

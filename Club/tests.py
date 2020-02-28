@@ -1,7 +1,10 @@
 from django.test import TestCase
 from .models import Meeting, MeetingMinutes, Resource, Event
+from .forms import MeetingForm, MeetingMinutesForm
+from .views import addMeeting
 from django.urls import reverse
 from django.contrib.auth.models import User
+
 
 class MeetingTest(TestCase):
     # test if running str() will return meeting_title value
@@ -67,3 +70,26 @@ class GetMeetingDetailTest(TestCase):
         response = self.client.get(reverse('meetingdetail', args=(self.meet.id,)))
         # assert that self.post is actually returned by the post_detail view
         self.assertEqual(response.status_code, 200)
+
+####### FORM TESTS #######
+class MeetingForm_Test(TestCase):
+    def test_meetingform_is_valid(self):
+        form = MeetingForm(data={'meeting_title': "test", 'meeting_date': "2020-02-27", 
+                                 'meeting_time': "16:36", 'meeting_location': "Leipzig", 
+                                 'meeting_agenda': "Die Zukunft planen."})
+        self.assertTrue(form.is_valid())
+    
+    def test_meetingform_empty(self):
+        form = MeetingForm(data={'meeting_title': "", 'meeting_date': "", 
+                                 'meeting_time': "", 'meeting_location': "", 
+                                 'meeting_agenda': ""})
+        self.assertFalse(form.is_valid())
+
+class MeetingMinutes_FormTest(TestCase):
+    def test_minutesform_is_valid(self):
+        meeting = Meeting.objects.create(meeting_title='study group', meeting_date='2019-04-05', 
+                       meeting_time='18:00', meeting_location='Tacoma', 
+                       meeting_agenda='test')
+        user = User.objects.create(username = 'Maria')
+        form = MeetingMinutesForm(data={'meetingID': meeting.id, 'attendance': user, 'minutes_text': 'test'}) 
+        self.assertTrue(form.is_valid())

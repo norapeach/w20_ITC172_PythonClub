@@ -10,5 +10,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('getResource/', views.getResource, name='resource'),
     path('getMeetings/', views.getMeetings, name='meetings'),
-    path('getMeetingDetails/<int:id>', views.getMeetingDetails, name='meetingdetail')
+    path('getMeetingDetails/<int:id>', views.getMeetingDetails, name='meetingdetail'),
+    path('getEvent/', views.getEvent, name='event'),
+    path('addMeeting/', views.addMeeting, name='addmeeting'),
+    path('addMeetingMinutes/', views.addMeetingMinutes, name='addmeetingmins'),
+    path('addResource/', views.addResource, name='addresource'),
 ]
