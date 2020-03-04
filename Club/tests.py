@@ -86,10 +86,13 @@ class MeetingForm_Test(TestCase):
         self.assertFalse(form.is_valid())
 
 class MeetingMinutes_FormTest(TestCase):
-    def test_minutesform_is_valid(self):
-        meeting = Meeting.objects.create(meeting_title='study group', meeting_date='2019-04-05', 
+    # method to instatialize user object and meeting to be passed to test for validation
+    def setUp(self):
+        self.user = User.objects.create(username='Katja')
+        self.meeting = Meeting.objects.create(meeting_title='study group', meeting_date='2019-04-05', 
                        meeting_time='18:00', meeting_location='Tacoma', 
                        meeting_agenda='test')
-        user = User.objects.create(username = 'Maria')
-        form = MeetingMinutesForm(data={'meetingID': meeting.id, 'attendance': user, 'minutes_text': 'test'}) 
+    #### THIS TEST IS FAILING, NEEDS TO BE REFACTORED ####
+    def test_minutesform_is_valid(self):
+        form = MeetingMinutesForm(data={'meeting_id': self.meeting, 'attendance': self.user, 'minutes_text': 'test'}) 
         self.assertTrue(form.is_valid())

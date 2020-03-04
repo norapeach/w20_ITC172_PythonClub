@@ -3,6 +3,9 @@
 ## Project files for first Django project and app
 Python Club site that acts as a hub for Python related study activities. Users can be added and they can add Python-related learning resources, events and meetings. 
 
+### 3/04 
+Refactored View getMeetingDetails() by adding try/except to check whether an instance of MeetingMinutes exists or not, which triggers a conditional statement in the template to display the url to the addMeetingMinutes template and Form View. Meeting minutes details can now be added once to each meeting, however the test MeetingMinutes_FormTest.test_minutesform_is_valid() is returning false.
+   
 ### 2/27
 Add forms to allow for users to create meetings and resource items that display on the respective Resources and Meetings pages.
 

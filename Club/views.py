@@ -24,7 +24,10 @@ def getMeetings(request):
 
 def getMeetingDetails(request, id): # could add an extended context to include meeting minutes
     meet = get_object_or_404(Meeting, pk=id)
-    meetingMinutes = MeetingMinutes.objects.filter(meeting_id=id)
+    try: # like a clause for exceptions/errors for models
+        meetingMinutes = MeetingMinutes.objects.get(meeting_id=id)
+    except MeetingMinutes.DoesNotExist: # django exception 
+        meetingMinutes = None
     details = {
         'meet': meet,
         'meetingMinutes': meetingMinutes,
@@ -48,7 +51,7 @@ def addMeeting(request):
         form = MeetingForm() # if not POST or is_valid() == false, django returns empty form
     return render(request, 'Club/addmeeting.html', {'form': form})
 
-def addMeetingMinutes(request): # this is not working and I am not certain why
+def addMeetingMinutes(request):
     minutes_f = MeetingMinutesForm
     if request.method == 'POST':
         minutes_f = MeetingMinutesForm(request.POST)

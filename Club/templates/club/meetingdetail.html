@@ -5,6 +5,19 @@
 <p>Time: {{ meet.meeting_time }}</p>
 <p>Location: {{ meet.meeting_location }}</p>
 <p>Agenda: {{ meet.meeting_agenda }}</p>
-<p>Attendance: {{ meetingMinutes.attendance }}</p>
+<p>Attendance: 
+    <ul>
+        {% for user in meetingMinutes.attendance.all %} 
+        <!-- for each loop runs through any/all instances of user in attendance -->
+        <!-- and populates any/all -->
+            <li>{{ user }}</li>
+        {% endfor %}
+    </ul>
+</p>
 <p>Minutes Notes: {{ meetingMinutes.minutes_text }}</p>
+<!-- if statement to show link to meeting minutes form if meeting detail 
+        doesn't already have minutes added -->
+{% if meetingMinutes == None %} 
+<p><a href="{% url 'addmeetingmins' %}">Add Meeting Minutes</a></p>
+{% endif %}
 {% endblock %}
