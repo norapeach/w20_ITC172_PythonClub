@@ -96,3 +96,25 @@ class MeetingMinutes_FormTest(TestCase):
     def test_minutesform_is_valid(self):
         form = MeetingMinutesForm(data={'meeting_id': self.meeting, 'attendance': self.user, 'minutes_text': 'test'}) 
         self.assertTrue(form.is_valid())
+
+######### LOGIN TESTS #########
+class New_meeting_authentication_test(TestCase):
+    #setUp function gets user object, and creates test Meeting instance
+    def setUp(self):
+        self.test_user = User.objects.create_user(username='testuser1', 
+                                              password='P@ssw0rd1')
+        self.meeting = Meeting.objects.create(meeting_title='study group',
+                                          meeting_date='2019-04-05', meeting_time='18:00', meeting_location='Tacoma',     meeting_agenda='test')
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('addmeeting'))
+         # below tests that not logged in client is redirected to login then to the add meeting page
+        self.assertRedirects(response, '/accounts/login/?next=/Club/addMeeting/') 
+        
+    # logs in the test user instance & checks that user can access form
+    # returns true if correct template is returned when form is accessed
+    def test_logged_in_uses_correct_template(self):
+        login = self.client.login(username ='testuser1', password='P@ssw0rd1')
+        response = self.client.get(reverse('addmeeting'))
+        self.assertEqual(str(response.context['user']), 'testuser1')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'Club/addmeeting.html')

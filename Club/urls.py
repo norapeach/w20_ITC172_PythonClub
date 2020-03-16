@@ -15,4 +15,6 @@ urlpatterns = [
     path('addMeeting/', views.addMeeting, name='addmeeting'),
     path('addMeetingMinutes/', views.addMeetingMinutes, name='addmeetingmins'),
     path('addResource/', views.addResource, name='addresource'),
+    path('loginmessage/', views.loginmessage, name='loginmessage'),
+    path('logoutmessage/', views.logoutmessage, name='logoutmessage'),
 ]
