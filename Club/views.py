@@ -55,13 +55,13 @@ def addMeeting(request):
 
 @login_required
 def addMeetingMinutes(request):
-    minutes_f = MeetingMinutesForm
+    minutes_f = MeetingMinutesForm # reference to Meeting
     if request.method == 'POST':
         minutes_f = MeetingMinutesForm(request.POST)
         if minutes_f.is_valid():
-            post = minutes_f.save(commit=True)
-            post.save()
-            minutes_f = MeetingMinutesForm
+            minutesPost = minutes_f.save(commit=True)
+            minutesPost.save()
+            minutes_f = MeetingMinutesForm() # was missing ()
     else:
         minutes_f = MeetingMinutesForm()
     return render(request, 'Club/addmeetingmins.html', {'minutes_f': minutes_f})
@@ -74,7 +74,7 @@ def addResource(request):
         if resource.is_valid():
             resourcePost = resource.save(commit=True)
             resourcePost.save()
-            resource=ResourceForm
+            resource=ResourceForm() # was missing ()
     else:
         resource=ResourceForm()
     return render(request, 'Club/addresource.html', {'resource': resource})

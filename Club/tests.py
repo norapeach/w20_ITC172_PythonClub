@@ -1,7 +1,7 @@
 from django.test import TestCase
-from .models import Meeting, MeetingMinutes, Resource, Event
-from .forms import MeetingForm, MeetingMinutesForm
-from .views import addMeeting
+from .models import Meeting, MeetingMinutes, Resource, Event, User
+from .forms import MeetingForm, MeetingMinutesForm, ResourceForm
+from .views import addMeeting, addResource, index, getMeetings, getMeetingDetails, getResource, getEvent
 from django.urls import reverse
 from django.contrib.auth.models import User
 
@@ -86,17 +86,35 @@ class MeetingForm_Test(TestCase):
         self.assertFalse(form.is_valid())
 
 class MeetingMinutes_FormTest(TestCase):
-    # method to instatialize user object and meeting to be passed to test for validation
+    # method to instatialize user objects (for MMin attendance) and meeting to be passed to test for validation
     def setUp(self):
-        self.user = User.objects.create(username='Katja')
+        self.user = User.objects.create(username='katja')
+        self.user = User.objects.create(username='alina')
+        self.user = User.objects.create(username='jule')
         self.meeting = Meeting.objects.create(meeting_title='study group', meeting_date='2019-04-05', 
                        meeting_time='18:00', meeting_location='Tacoma', 
                        meeting_agenda='test')
-    #### THIS TEST IS FAILING, NEEDS TO BE REFACTORED ####
+    
+    ##### TEST IS FAILING: attempted to troubleshoot 3/21
     def test_minutesform_is_valid(self):
-        form = MeetingMinutesForm(data={'meeting_id': self.meeting, 'attendance': self.user, 'minutes_text': 'test'}) 
+        self.users = User.objects.all() # return setUp user objects
+        # change: form.meeting_id: self.meeting.id - Meeting object created above
+        # change: 'attendance' is passed var users above
+        form = MeetingMinutesForm(data={'meeting_id': self.meeting.id, 'attendance': self.users, 'minutes_text': 'test'}) 
         self.assertTrue(form.is_valid())
+    
+    # test to detrmine if form is empty 
+    def test_minutesform_is_empty(self):
+        form = MeetingMinutesForm(data={'meeting_id': "", 'attendance': "", 'minutes_text': ""})
+        self.assertFalse(form.is_valid())
 
+class ResourceFormTest(TestCase):
+    def test_ResourceForm_is_valid(self):
+        user = User.objects.create(pk=1).pk
+        form = ResourceForm(data={'resource_name': "Django", 'resource_type': 
+                            "Lookups in Django", 'resource_date_entered': "2019-04-05", 'resource_added_by_id': user})
+        self.assertTrue(form.is_valid())
+        
 ######### LOGIN TESTS #########
 class New_meeting_authentication_test(TestCase):
     #setUp function gets user object, and creates test Meeting instance
@@ -118,3 +136,20 @@ class New_meeting_authentication_test(TestCase):
         self.assertEqual(str(response.context['user']), 'testuser1')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'Club/addmeeting.html')
+
+class NewResourceAuthTest(TestCase):
+    def setUp(self):
+        self.test_user = User.objects.create_user(username='testuser2', password='P@ssword2')
+        self.resource = Resource.objects.create(resource_name='Django Models', resource_type='offical Django documentation', resource_URL='https://docs.djangoproject.com/en/3.0/topics/db/models/', resource_date_entered='2020-01-23', resource_added_by_id=self.test_user.id, resource_description='Official documentation on how to create Models in Django')
+    
+    def test_redirect_if_not_logged_in(self):
+        response=self.client.get(reverse('addresource'))
+        self.assertRedirects(response, '/accounts/login/?next=/Club/addResource/') 
+    
+    def test_logged_in_uses_correct_template(self):
+        login = self.client.login(username ='testuser2', password='P@ssw0rd2')
+        response = self.client.get(reverse('addresource'))
+        self.assertEqual(str(response.context['user']), 'testuser2')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'Club/addresource.html')
+        

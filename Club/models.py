@@ -23,7 +23,7 @@ class Meeting(models.Model):
 # MeetingMinutes tracks data relating to attedence (linked to User) and meeting minutes content, linked to meeting class by FK
 class MeetingMinutes(models.Model):
     meeting = models.ForeignKey(Meeting, on_delete=models.DO_NOTHING) # record of meeting and related data will be kept here even if meeting is deleted
-    attendance = models.ManyToManyField(User) # django resolves this with linking table
+    attendance = models.ManyToManyField(User) # django resolves this with linking table - in DB: table meeting_minutes_attendance
     minutes_text = models.TextField()
     
     def __str__(self):
